@@ -29,7 +29,7 @@ public class Wallet {
     private User user;
 
 
-    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Transaction> transactions = new HashSet<>();
 
     public Wallet(String name, double balance) {

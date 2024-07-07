@@ -2,6 +2,7 @@
 package com.example.expensetracker.service;
 
 import com.example.expensetracker.model.Transaction;
+import com.example.expensetracker.model.TransactionType;
 import com.example.expensetracker.model.User;
 import com.example.expensetracker.model.Wallet;
 import com.example.expensetracker.repository.TransactionRepository;
@@ -44,10 +45,14 @@ public class TransactionService {
         transaction.setCreatedAt(new Date());
         Wallet wallet = walletRepository.findById(transaction.getWallet().getId())
                 .orElseThrow(() -> new RuntimeException("From wallet not found"));
-        wallet.setBalance(wallet.getBalance() - transaction.getAmount());
-        walletRepository.save(wallet);
 
-        return transactionRepository.save(transaction);
+        if(transaction.getType().equals(TransactionType.INCOME))
+            wallet.setBalance(wallet.getBalance() + transaction.getAmount());
+        else wallet.setBalance(wallet.getBalance() - transaction.getAmount());
+
+        transactionRepository.save(transaction);
+        walletRepository.save(wallet);
+        return transaction;
     }
 
     public List<Transaction> getTransactionsByWallet(Long walletId) {
